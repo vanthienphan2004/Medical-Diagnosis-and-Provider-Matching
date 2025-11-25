@@ -91,9 +91,9 @@ class DiagnosticModel:
         # Filter df to valid rows
         df = df.loc[valid_rows].copy()
         
-        # Add symptom columns
-        for sym, values in symptom_data.items():
-            df[sym] = values
+        # Add symptom columns efficiently using pd.concat to avoid fragmentation
+        symptom_df = pd.DataFrame(symptom_data, index=df.index)
+        df = pd.concat([df, symptom_df], axis=1)
             
         return df
 
@@ -203,14 +203,20 @@ class DiagnosticModel:
         df = pd.DataFrame([input_data])
         
         # Ensure all feature columns exist (fill missing with 0 for symptoms)
+        missing_cols = {}
         for col in self.feature_columns:
             if col not in df.columns:
                 if col == 'SEX':
-                    df[col] = 'M' # Default or handle appropriately
+                    missing_cols[col] = 'M' # Default or handle appropriately
                 elif col == 'AGE':
-                    df[col] = 30 # Default
+                    missing_cols[col] = 30 # Default
                 else:
-                    df[col] = 0
+                    missing_cols[col] = 0
+        
+        # Add missing columns efficiently
+        if missing_cols:
+            missing_df = pd.DataFrame([missing_cols])
+            df = pd.concat([df, missing_df], axis=1)
                     
         # Predict
         probs = self.model.predict_proba(df)[0]

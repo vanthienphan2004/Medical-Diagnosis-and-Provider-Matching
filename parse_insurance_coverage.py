@@ -27,7 +27,6 @@ def parse_insurance_coverage(file_path: str, target_npis: Set[str]) -> Generator
                     for npi in npis:
                         npi_str = str(npi)
                         if npi_str in target_npis:
-                            print(f"DEBUG: Found NPI {npi_str} in file.")
                             yield {
                                 "npi": npi_str,
                                 "in_network": True,

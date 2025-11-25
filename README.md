@@ -47,6 +47,19 @@ Input Symptoms → Diagnostic Model → Taxonomy Mapping → Provider Fetch (NPP
 python test_suite.py
 ```
 
+### Generate Visualizations
+```bash
+python visualize.py
+```
+
+This creates `neurotriage_visualization.png` with:
+- Pathology distribution in training data
+- Age distribution by pathology
+- Gender distribution
+- Model prediction confidence
+- Provider affinity scores by scenario
+- System architecture flow diagram
+
 ### Train Model
 ```bash
 python model_train.py
